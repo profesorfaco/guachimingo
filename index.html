@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sename</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Sename</h1>
+                <div id="mapid" style="width: 100%; height: 80vh;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        Papa.parse("https://raw.githubusercontent.com/profesorfaco/guachimingo/master/centros-sename.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+            
+                console.log(results);
+                var mymap = L.map('mapid').setView([-33.4433995, -70.653125], 11);
+                L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                    maxZoom: 18,
+                    id: 'mapbox.streets'
+                }).addTo(mymap);
+                console.log(results.data.length);
+                for (var a = 0; a < results.data.length; a++) {
+                    L.marker([results.data[a].lat, results.data[a].lon])
+                        .addTo(mymap)
+                        .bindPopup('<h5>'+ results.data[a].nombre + '</h5><p>' + results.data[a].direccion + ', ' + results.data[a].comuna + '</p>')
+                }
+            }
+
+        });
+    </script>    
+</body>
+</html>
